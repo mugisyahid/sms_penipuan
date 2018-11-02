@@ -34,6 +34,16 @@
             "date": 1540803055369,
             "name": "var\\log\\application-2018-10-29-15.log",
             "hash": "5a9128428df76bdc97721793cc3b6df0"
+        },
+        {
+            "date": 1541142888283,
+            "name": "var\\log\\application-2018-11-02-14.log",
+            "hash": "de2928ad91403bb358f28cbc4a984cac"
+        },
+        {
+            "date": 1541145689394,
+            "name": "var\\log\\application-2018-11-02-15.log",
+            "hash": "c9d93bb141964e19a92010d1b4116c68"
         }
     ]
 }
