@@ -1,7 +1,7 @@
 module.exports = {
-    port: 3000,
+    port: 4000,
     address: 'localhost',
-    appName: 'Api Aisha FSM',
+    appName: 'SMS Penipuan FSM',
     timeStampFile: './var/timeStamp.txt',
     appMode: 'test',
     bcrypt: 10,

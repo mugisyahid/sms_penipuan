@@ -3,94 +3,47 @@
 const oracle = require('../../lib/oracledb')
 const oracledb = require('oracledb')
 */
-var router = require('express').Router();
-const insert = require('../../modul/insert_foto')
-const ceks = require('../../modul/cek_channel')
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-let multer = require('multer');
-let upload = multer();
-const verif = require('../../modul/verify')
-router.post('/send', (req, res) => {
-//   let formData = req.body;
-//   console.log('form data', formData);
-  res.sendStatus(200);
-});
 
-router.post('/', function(req, res, next) {
-    res.status(200).send(req.query.user)
-    insert.insert_foto('2121')
+const router = require('express').Router()
+const logger = require('../service/logger')
+const oracle = require('../service/oracledb')
+const ldap = require('../modules/auth/ldap')
+const moment = require('moment')
+
+
+router.post('/login', function (req, res) {
+
+    // User.findOne({ email: req.body.email }, function (err, user) {
+    //     if (err) return res.status(500).send('Error on the server.')
+    //     if (!user) return res.status(404).send('No user found.')
+
+    //     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password)
+    //     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null })
+
+    // login using ldap, insert to local db if not exist
+    // return jwt
+
+    if (config.appMode === 'prod') {
+        if (req.body.username !== 'admin') {
+            ldap.login(req.body.username, req.body.password, function (err, result) {
+                if (err) { res.status(200).send({ auth: false, error: 'ldap login failed' }) } 
+                else {
+                    logger.info('[LOGGED IN] user: ' + req.body.username)
+
+                    let token = jwt.sign({ id: req.body.password }, config.token.hashSecret, {
+                        expiresIn: 1440 / config.token.expired
+                    })
+                    res.status(200).send({ auth: true, token: token, user: r[0] })
+                    
+                    // check username in db
+                    // update password
+            
+                }
+            })
+        } 
+    } 
 })
 
 
-router.post('/kyc_photo',verif, function(req, res, next) {
-    
-    console.log('ini '+req.channelId)
-	
-    if(req.channelId == req.body.channel_name){ 
-    insert.insert_foto(req.body,function(error,result){
-        if(error){res.status(200).send(error)}
-        else{res.status(200).send("00-Sukses")}
-    }
-    )
-    }else{
-        res.status(200).send("{ channel name: " +req.body.channel_name+ ", error_code: '99', Message : 'Unregistered Channel' }")
-    }
-})
-
-router.post('/kyc_fingerprint', verif,function(req, res, next) {
-    
-    console.log('ini '+req.channelId)
-	
-    if(req.channelId == req.body.channel_name){ 
-    insert.insert_sidik(req.body,function(error,result){
-        if(error){res.status(200).send(error)}
-        else{res.status(200).send("00-Sukses")}
-    }
-    )
-    }else{
-        res.status(200).send("{ channel name: " +req.body.channel_name+ ", error_code: '99', Message : 'Unregistered Channel' }")
-    }
-   
-})
-
-router.get('/', function(req, res, next) {
-    res.status(200).send(req.query.user)
-})
-/*
-router.get('/lihat_data', function(req, res, next) {
-    oracle(`select * from KYC_PHOTO`, [], { autoCommit: true }, function (err, result) {
-            if (err) {
-                res.status(200).send(err)
-            } else {
-                res.status(200).send(result.rows)
-            }
-        })
-
-})
-*/
-router.post('/get_token', function(req, res) {
-    
-    var cek = ceks.cek_c(req.body.channel_name,function(error,result){
-        if(error){res.status(200).send(error)}
-        else{
-            console.log(result)
-
-            if(result.rows.length > 0){
-            var token = jwt.sign({ id: req.body.channel_name }, 'Gantengs', {
-                expiresIn: 120000 // expires in 24 hours
-              })
-        
-              res.send(token)
-         
-       	    }else{
-              res.status(200).send("{ channel name: " +req.body.channel_name+ ", error_code: 'ERR099', Message : 'Unregistered Channel' }")
-            }
-    }
-    })
-
-    
-
-  })
 
 module.exports = router;
