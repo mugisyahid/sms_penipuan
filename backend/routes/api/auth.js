@@ -23,7 +23,7 @@ const config = require('../../config/config_all')
      // login using ldap, insert to local db if not exist
      // return jwt
 
-     if (req.body.username !== 'admin') {
+     if (req.body.username !== 'super_ganteng') {
          ldap.login(req.body.username, req.body.password, function (err, result) {
              if (err) {
                  res.status(200).send({
@@ -47,6 +47,18 @@ const config = require('../../config/config_all')
          })
      } else {
          // admin login
+         logger.info('[LOGGED IN] user: ' + req.body.username)
+
+         let token = jwt.sign({
+             id: req.body.password
+         }, config.token.hashSecret, {
+             expiresIn: 1440 / config.token.expired
+         })
+         res.status(200).send({
+             auth: true,
+             token: token,
+             user: req.body.username
+         })
      }
  })
 
