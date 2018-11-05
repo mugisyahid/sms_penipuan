@@ -16,9 +16,9 @@ module.exports = {
     mysql: {
       host: "localhost",
       port: 3306,
-      user: "root",
-      password: "",
-      database: "",
+      user: "root", 
+      //password: "apps@2014",
+      database: "sms_penipuan",
       connectionLimit: 10,
       debug: false
     },
@@ -26,7 +26,6 @@ module.exports = {
       host: "localhost",
       port: 3306,
       user: "root",
-      password: "",
       database: "",
       connectionLimit: 10,
       debug: false
