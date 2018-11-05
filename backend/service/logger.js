@@ -34,7 +34,7 @@ const transports = {
     })
 }
 
-const logger = new winston.createLogger({
+const logger = winston.createLogger({
     format: combine(
         label({ label: '' }),
         timestamp(),

@@ -13,10 +13,32 @@ module.exports = {
       headerToken: 'Bearer ',
       expired: 4
     },
-    oracle: {
-      user: "system",
-      password: "arkhana",
-      connectString: "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))(CONNECT_DATA = (SID = XE)))"
+    mysql: {
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "",
+      database: "",
+      connectionLimit: 10,
+      debug: false
+    },
+    mysql2: {
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "",
+      database: "",
+      connectionLimit: 10,
+      debug: false
+    },
+    mysql3: {
+      host: "localhost",
+      port: 3306,
+      user: "root",
+      password: "",
+      database: "",
+      connectionLimit: 10,
+      debug: false
     },
     ldap: {
       url: '10.2.126.64',
