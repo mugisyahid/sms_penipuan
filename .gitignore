@@ -75,3 +75,5 @@ node_modules
 
 *.log
 *audit.json
+
+backend/var/log/
