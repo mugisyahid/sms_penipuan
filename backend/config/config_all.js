@@ -26,7 +26,7 @@ module.exports = {
       host: "localhost",
       port: 3306,
       user: "root",
-      database: "",
+      database: "sms_penipuan",
       connectionLimit: 10,
       debug: false
     },

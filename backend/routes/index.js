@@ -39,6 +39,24 @@ router.post('/update_reference', (req, res) => {
     })
 })
 
+router.post('/get_detail', (req, res) => {
+    query.getDetail(req.body.msisdn,(err, r) => {
+        if(err){res.status(200).send(err)}
+        else{
+            console.log('sukses')
+            var hasil = r
+           // res.status(200).send(r)
+            query.getDetail2(req.body.msisdn,(ee,rr) => {
+                if(ee){res.status(200).send(ee)}
+                else{
+                    hasil.akhir = rr
+                    res.status(200).send({r,rr})
+                }
+            })
+        }
+    })
+})
+
 
 /*
 router.post('/kyc_photo',verif, function(req, res, next) {

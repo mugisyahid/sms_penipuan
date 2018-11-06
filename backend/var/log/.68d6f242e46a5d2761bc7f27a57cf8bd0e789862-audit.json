@@ -74,6 +74,11 @@
             "date": 1541408570199,
             "name": "var\\log\\application-2018-11-05-16.log",
             "hash": "69a96aac15f6a89e88a3a9cef5ae3cee"
+        },
+        {
+            "date": 1541487731270,
+            "name": "var\\log\\application-2018-11-06-14.log",
+            "hash": "b2d1dc128e48247314abf2646925e269"
         }
     ]
 }
