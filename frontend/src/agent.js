@@ -59,7 +59,7 @@ const Auth = {
 
 
 const Sms = {
-  getListAll: () => requests.get('/listAll'),
+  getPenipu: (f, t) => requests.get('/penipu?f=' + f + '&t=' + t),
   getReferencePenipu: () => requests.get('/referencePenipu'),
   insertDetail: (payload) => requests.post('/insert_detail', {
     payload
