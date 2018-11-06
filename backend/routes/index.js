@@ -7,6 +7,7 @@ const query = require('../query/script_query')
 router.use('/auth', require('./api/auth'))
 router.use('/penipu', require('./api/penipu'))
 router.use('/reference', require('./api/reference'))
+router.use('/sms', require('./api/sms_tipu'))
 
 router.get('/listAll', (req, res) => {
     query.getListPenipu((err, r) => {
