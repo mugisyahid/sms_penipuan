@@ -4,8 +4,9 @@ const query = require('../query/script_query')
 
 
 //router.use('/api', require('./api'));
-router.use('/auth', require('./api/auth'));
-//router.use('/api', require('./api/list_penipu'));
+router.use('/auth', require('./api/auth'))
+router.use('/penipu', require('./api/penipu'))
+router.use('/reference', require('./api/reference'))
 
 router.get('/listAll', (req, res) => {
     query.getListPenipu((err, r) => {
