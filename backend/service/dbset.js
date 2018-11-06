@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 const conf = require('../config/config_all')
+const logger = require('../service/logger')
 
 var con = mysql.createConnection({
     host: conf.mysql.host,
@@ -15,11 +16,11 @@ var con2 = mysql.createConnection({
 
 
 function ekse(query, callback) {
-    console.log(query)
+    logger.debug(query)
     con.connect(function (err) {
         if (err) throw err;
         con.query(query, function (err, result, fields) {
-            console.log(err, result, fields)
+            logger.debug(result)
             con.end()
             if (err) {
                 callback(err, null)
@@ -33,7 +34,7 @@ function ekse2(query, callback) {
     con2.connect(function (err) {
         if (err) throw err;
         con2.query(query, function (err, result, fields) {
-            console.log(err, result, fields)
+            logger.debug(result)
             con2.end()
             if (err) {
                 callback(err, null)
