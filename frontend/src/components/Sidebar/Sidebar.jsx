@@ -82,7 +82,8 @@ class Sidebar extends Component {
                     className={
                       `${prop.upgrade
                         ? "active active-pro"
-                        : this.activeRoute(prop.path)}`
+                        : this.activeRoute(prop.path)}
+                        ${prop.show ? "" : "hide"}`
                     }
                     key={key}
                   >

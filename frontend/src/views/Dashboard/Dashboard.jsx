@@ -121,4 +121,3 @@ class Dashboard extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Dashboard));
-
