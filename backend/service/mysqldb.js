@@ -6,14 +6,14 @@ const config = require('../config/config_all')
 const pool = mysql.createPool({
   host: config.mysql.host,
   user: config.mysql.user,
-  password: config.mysql.user,
+  password: config.mysql.password,
   database: config.mysql.database
 })
 
 const pool2 = mysql.createPool({
   host: config.mysql2.host,
   user: config.mysql2.user,
-  password: config.mysql2.user,
+  password: config.mysql2.password,
   database: config.mysql2.database
 })
 
