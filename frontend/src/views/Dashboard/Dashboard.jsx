@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
 class Dashboard extends Component {
 
   componentWillMount() {
-    this.props.onLoad(Promise.all([agent.Sms.getPenipu(0, 10)]))
+    this.props.onLoad(Promise.all([agent.Sms.getPenipu(0, 100)]))
   }
   componentWillUnmount() {
     this.props.onUnload();

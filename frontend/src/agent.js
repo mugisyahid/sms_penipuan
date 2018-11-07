@@ -65,7 +65,7 @@ const Sms = {
   insertDetail: (payload) => requests.post('/insert_detail', {
     payload
   }),
-  updateReference: (payload) => requests.post('/update_reference', {
+  updateReference: (payload) => requests.post('/reference', {
     payload
   }),
   getDetail: (payload) => requests.post('/get_detail', {

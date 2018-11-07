@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { Component } from "react";
 import {
     Grid, Row, Col,
@@ -6,7 +5,7 @@ import {
 } from "react-bootstrap";
 import { connect } from 'react-redux';
 import agent from '../../agent';
-import moment from 'moment';
+// import moment from 'moment';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 
 import Card from "../../components/Card/Card.jsx";
@@ -15,7 +14,8 @@ import Button from "../../components/CustomButton/CustomButton.jsx";
 import {
     UPDATE_DETAIL_SMS_PAGE_UNLOADED,
     GET_REFERENCE_SMS_BY_MSISDN,
-    UPDATE_FIELD_SMS
+    UPDATE_FIELD_SMS,
+    UPDATE_SMS_REFERENCE
 } from '../../constants/actionTypes';
 
 
@@ -27,6 +27,9 @@ const mapDispatchToProps = dispatch => ({
         dispatch({ type: UPDATE_DETAIL_SMS_PAGE_UNLOADED }),
     onUpdateField: (key, value) =>
         dispatch({ type: UPDATE_FIELD_SMS, key, value }),
+    onUpdate: (payload) =>
+        dispatch({ type: UPDATE_SMS_REFERENCE, payload }),
+
 });
 
 class ViewPenipu extends Component {
@@ -35,13 +38,16 @@ class ViewPenipu extends Component {
         super()
         const updateFieldEvent = key => ev => this.props.onUpdateField(key, ev.target.value)
         this.changeStatus = updateFieldEvent('status')
-        // this.submitForm = (oldStatus) => ev => {
-        //     const division = this.props.user.division ? this.props.user.division : this.props.oldUser[0][0].DIVISION;
-        //     if (oldStatus === 'INCOMPLETE') {
-        //         this.props.onClickLogout()
-        //     }
-        //     this.props.onSubmit(this.props.location.pathname.replace('/updateUser/', ''), status, new Date(), username, email, name, roles, department, division)
-        // }
+        this.submit = () => ev => {
+            ev.preventDefault()
+            const param = {
+                msisdn: this.props.location.pathname.replace('/update/penipu/', ''),
+                updater: window.localStorage.getItem('user').substring(1, window.localStorage.getItem('user').length - 1),
+                status: this.props.sms.status ? this.props.sms.status : this.props.sms.reference[0].status
+            }
+            const payload = agent.Sms.updateReference(param)
+            this.props.onUpdate(payload)
+        }
     }
     componentWillMount() {
         this.props.onLoad(Promise.all([agent.Sms.getReferencePenipu(this.props.location.pathname.replace('/update/penipu/', ''))]))
@@ -52,6 +58,12 @@ class ViewPenipu extends Component {
     render() {
         if (!this.props.sms.reference) {
             return null;
+        }
+        if (typeof this.props.sms.hasil !== 'undefined') {
+            if (this.props.sms.hasil.changedRows !== 0) {
+                // redirect to home
+                return <Redirect to='/home' />;
+            }
         }
 
         return (<div className="content">
@@ -98,7 +110,7 @@ class ViewPenipu extends Component {
                                     <div className="typo-line">
                                         <p>
                                             <span className="category"></span>
-                                            <Button bsStyle="info" fill type="submit" /*onClick={this.submitForm()}*/>
+                                            <Button bsStyle="info" fill type="submit" onClick={this.submit()}>
                                                 Update
                                             </Button>
                                         </p>

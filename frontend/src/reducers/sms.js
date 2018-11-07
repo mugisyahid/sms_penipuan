@@ -4,7 +4,8 @@ import {
     GET_DETAIL_SMS_BY_MSISDN,
     UPDATE_DETAIL_SMS_PAGE_UNLOADED,
     GET_REFERENCE_SMS_BY_MSISDN,
-    UPDATE_FIELD_SMS
+    UPDATE_FIELD_SMS,
+    UPDATE_SMS_REFERENCE
 } from '../constants/actionTypes';
 
 export default (state = {}, action) => {
@@ -14,7 +15,7 @@ export default (state = {}, action) => {
                 ...state,
                 listPenipu: action.payload[0],
                 page: 1,
-                limit: 10
+                limit: 100
             }
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
@@ -29,6 +30,10 @@ export default (state = {}, action) => {
         case UPDATE_FIELD_SMS:
             return { ...state,
                 [action.key]: action.value
+            };
+        case UPDATE_SMS_REFERENCE:
+            return { ...state,
+                hasil: action.payload
             };
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
         case UPDATE_DETAIL_SMS_PAGE_UNLOADED:
