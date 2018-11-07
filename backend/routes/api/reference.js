@@ -8,6 +8,11 @@ router.get('/', (req, res) => {
         res.send(r)
     })
 })
+router.post('/', (req, res) => {
+    query.updateReference(req.body.payload, (err, r) => {
+        res.send(r)
+    })
+})
 
 
 
