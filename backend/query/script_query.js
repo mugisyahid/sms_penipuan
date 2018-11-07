@@ -21,13 +21,13 @@ function getReference(callback){
 }
 
 function getDetail(msisdn,callback){
-var query1 = `select * from sms_1166_trans where destination = ${msisdn}`
+var query1 = `select destination as msisdn, 0 as pelapor, body as content, source, row_date as tanggal from sms_1166_trans where destination = ${msisdn}`
     console.log(query1)
     kon.ekse(query1,callback)
 }
 
 function getDetail2(msisdn,callback){
-    var query1 = `select * from t_sms_penipu where msisdn_target = ${msisdn}`
+    var query1 = `select msisdn_target as msisdn, msisdn_pelapor as pelapor, content, source, date_system as tanggal from t_sms_penipu where msisdn_target = ${msisdn}`
     console.log(query1)
         kon.ekse2(query1,callback)
     }
