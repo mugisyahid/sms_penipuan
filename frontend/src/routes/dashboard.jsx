@@ -1,5 +1,5 @@
 import Dashboard from "../views/Dashboard/Dashboard";
-import UpdatePenipu from "../views/Penipu/UpdatePenipu";
+// import UpdatePenipu from "../views/Penipu/UpdatePenipu";
 import NewPenipu from "../views/Penipu/NewPenipu";
 import ViewPenipu from "../views/Penipu/ViewPenipu";
 
@@ -22,20 +22,20 @@ const dashboardRoutes = [
     icon: "pe-7s-graph",
     component: ViewPenipu
   },
+  // {
+  //   display: 'Creator, Admin, Executor, Approver',
+  //   show: false,
+  //   path: "/update/penipu",
+  //   name: "Home",
+  //   icon: "pe-7s-graph",
+  //   component: UpdatePenipu
+  // },
   {
     display: 'Creator, Admin, Executor, Approver',
-    show: false,
-    path: "/update/penipu",
-    name: "Home",
-    icon: "pe-7s-graph",
-    component: UpdatePenipu
-  },
-  {
-    display: 'Creator, Admin, Executor, Approver',
-    show: false,
+    show: true,
     path: "/newPenipu",
-    name: "Home",
-    icon: "pe-7s-graph",
+    name: "Input Laporan",
+    icon: "pe-7s-box1",
     component: NewPenipu
   }
   // auth

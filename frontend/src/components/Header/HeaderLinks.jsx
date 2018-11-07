@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
-import { Redirect, withRouter, Link } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import { FIRST_LOAD, LOGOUT } from "../../constants/actionTypes";
 import { connect } from 'react-redux';
@@ -53,7 +53,7 @@ class HeaderLinks extends Component {
           }
         ]
       })
-    };
+    }
 
     const expired = window.localStorage.getItem('expiredDate')
     if (expired < moment(new Date()).valueOf()) {
@@ -65,47 +65,14 @@ class HeaderLinks extends Component {
     let i = 0
     if (this.props.common.notif.length > 0) {
       this.props.common.notif.forEach((n, idx) => {
-        // if (user.PRIVILEGES_ROLES === 'Creator' && n.STATUS !== 'Created') {
-        //   arr[i++] = n
-        // } else if (user.PRIVILEGES_ROLES === 'Approver') {
-        //   arr[i++] = n
-        // } else {
         arr[i++] = n
-        // }
       })
     }
-
-    const notification = (
-      <div>
-        <i className="fa fa-globe" />
-        <b className="caret" />
-        <span className="notification">{arr.length}</span>
-        <p className="hidden-lg hidden-md">Notification</p>
-      </div>
-    );
 
     return (
       <div>
         {
           <div>
-            <Nav>
-              <NavItem eventKey={1} href="localhost:4000/sms_penipuan/home">
-                <i className="fa fa-dashboard" />
-                <p className="hidden-lg hidden-md">Home</p>
-              </NavItem>
-              <NavDropdown
-                title={notification}
-                noCaret
-                id="basic-nav-dropdown"
-              >
-                <MenuItem>Notification</MenuItem>
-                <MenuItem divider />
-                {arr.map((prop, key) => {
-                  return <MenuItem><Link to={`/viewTicket/${prop.TICKET_ID}`}>{prop.TICKET}</Link></MenuItem>
-                })}
-
-              </NavDropdown>
-            </Nav>
             <Nav pullRight>
               <NavDropdown
                 eventKey={2}
