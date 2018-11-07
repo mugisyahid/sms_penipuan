@@ -2,13 +2,11 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import common from "./reducers/common";
 import auth from "./reducers/auth";
-import ticket from "./reducers/tickets";
-import user from "./reducers/users";
+import sms from "./reducers/sms";
 
 export default combineReducers({
   auth,
   common,
-  ticket,
-  user,
+  sms,
   router: routerReducer
 });

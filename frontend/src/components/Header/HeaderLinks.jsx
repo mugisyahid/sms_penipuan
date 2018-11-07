@@ -112,11 +112,7 @@ class HeaderLinks extends Component {
                 title="Profile"
                 id="basic-nav-dropdown-right"
               >
-                <MenuItem eventKey={2.1}>Logged in as: {user ? user.USER_ID : ""}</MenuItem>
-                <MenuItem divider />
-                <MenuItem eventKey={2.1}>Name: {user ? user.NAME : ""}</MenuItem>
-                <MenuItem eventKey={2.1}>Email: {user ? user.CONTACT_EMAIL : ""}</MenuItem>
-                <MenuItem eventKey={2.2}>Roles: {user ? user.PRIVILEGES_ROLES : ""}</MenuItem>
+                <MenuItem eventKey={2.1}>Logged in as: {user ? user.substring(1, user.length - 1) : ""}</MenuItem>
               </NavDropdown>
               <NavItem onClick={logOut}>
                 Log out

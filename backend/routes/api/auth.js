@@ -34,7 +34,8 @@ const config = require('../../config/config_all')
                  logger.info('[LOGGED IN] user: ' + req.body.username)
 
                  let token = jwt.sign({
-                     id: req.body.password
+                     id: req.body.password,
+                     username: req.body.username
                  }, config.token.hashSecret, {
                      expiresIn: 1440 / config.token.expired
                  })
@@ -47,7 +48,7 @@ const config = require('../../config/config_all')
          })
      } else {
          // admin login
-         logger.info('[LOGGED IN] user: ' + req.body.username)
+         logger.info('[LOGGED admin] user: ' + req.body.username)
 
          let token = jwt.sign({
              id: req.body.password
