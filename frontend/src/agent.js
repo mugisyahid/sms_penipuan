@@ -63,9 +63,7 @@ const Sms = {
   countPenipu: () => requests.get('/penipu/count'),
   getReferencePenipu: (msisdn) => requests.get('/reference?msisdn=' + msisdn),
   getDetailSMS: (msisdn) => requests.get('/sms/v2?msisdn=' + msisdn),
-  insertDetail: (payload) => requests.post('/insert_detail', {
-    payload
-  }),
+  insertDetail: (payload) => requests.post('/insert_detail', payload),
   updateReference: (payload) => requests.post('/reference', {
     payload
   }),

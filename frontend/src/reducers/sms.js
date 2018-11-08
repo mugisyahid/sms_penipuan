@@ -7,7 +7,11 @@ import {
     UPDATE_FIELD_SMS,
     UPDATE_SMS_REFERENCE,
     UPDATE_SEARCH_SMS,
-    UPDATE_SEARCH_SMS_PAGE
+    UPDATE_SEARCH_SMS_PAGE,
+    INSERT_DETAIL_SMS_PAGE_LOADED,
+    INSERT_DETAIL_SMS_PAGE_UNLOADED,
+    INSERT_DETAIL_SMS_UPDATE,
+    INSERT_DETAIL_SMS
 } from '../constants/actionTypes';
 
 export default (state = {}, action) => {
@@ -22,7 +26,8 @@ export default (state = {}, action) => {
                 changeSearchCount: 10,
                 changeSearchMsisdn: '',
                 changeSearchJumlah: 0,
-                changeStatus: 'Follow Up'
+                changeStatus: 'Follow Up',
+                redirect: ''
             }
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
@@ -58,6 +63,11 @@ export default (state = {}, action) => {
                     };
 
             }
+        case INSERT_DETAIL_SMS:
+            return { ...state,
+                redirect: '/home'
+            };
+        case INSERT_DETAIL_SMS_UPDATE:
         case UPDATE_SEARCH_SMS:
         case UPDATE_FIELD_SMS:
             return { ...state,
@@ -69,6 +79,13 @@ export default (state = {}, action) => {
                 hasil: action.payload,
                 selectedMSISDN: ''
             };
+        case INSERT_DETAIL_SMS_PAGE_LOADED:
+            return { ...state,
+                pelapor: '',
+                target: '',
+                content: '',
+            };
+        case INSERT_DETAIL_SMS_PAGE_UNLOADED:
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
         case UPDATE_DETAIL_SMS_PAGE_UNLOADED:
         default:
