@@ -11,7 +11,8 @@ import {
     INSERT_DETAIL_SMS_PAGE_LOADED,
     INSERT_DETAIL_SMS_PAGE_UNLOADED,
     INSERT_DETAIL_SMS_UPDATE,
-    INSERT_DETAIL_SMS
+    INSERT_DETAIL_SMS,
+    POP_UP_MODAL
 } from '../constants/actionTypes';
 
 export default (state = {}, action) => {
@@ -27,7 +28,8 @@ export default (state = {}, action) => {
                 changeSearchMsisdn: '',
                 changeSearchJumlah: 0,
                 changeStatus: 'Follow Up',
-                redirect: ''
+                redirect: '',
+                show: false
             }
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
@@ -84,6 +86,11 @@ export default (state = {}, action) => {
                 pelapor: '',
                 target: '',
                 content: '',
+            };
+        case POP_UP_MODAL:
+            return { ...state,
+                show: action.value,
+                result: action.arr
             };
         case INSERT_DETAIL_SMS_PAGE_UNLOADED:
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
