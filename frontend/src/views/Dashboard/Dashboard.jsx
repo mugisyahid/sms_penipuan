@@ -1,15 +1,19 @@
 import React, { Component } from "react";
-import { Grid, Row, Col, Table } from "react-bootstrap";
+import { Grid, Row, Col, Table, FormGroup, ControlLabel, FormControl, Checkbox, Pagination } from "react-bootstrap";
 import Card from "../../components/Card/Card";
 import Button from "../../components/CustomButton/CustomButton";
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert'; // Import
 
 import agent from '../../agent';
 
 import {
   HOME_PAGE_UNLOADED,
-  HOME_PAGE_LOADED
+  HOME_PAGE_LOADED,
+  UPDATE_SEARCH_SMS,
+  UPDATE_SEARCH_SMS_PAGE,
+  UPDATE_SMS_REFERENCE
 } from '../../constants/actionTypes';
 
 const mapStateToProps = state => ({
@@ -21,21 +25,110 @@ const mapDispatchToProps = dispatch => ({
   onLoad: (payload) =>
     dispatch({ type: HOME_PAGE_LOADED, payload }),
   onUnload: () =>
-    dispatch({ type: HOME_PAGE_UNLOADED })
+    dispatch({ type: HOME_PAGE_UNLOADED }),
+  onUpdateField: (key, value) =>
+    dispatch({ type: UPDATE_SEARCH_SMS, key, value }),
+  onChangePage: (value) =>
+    dispatch({ type: UPDATE_SEARCH_SMS_PAGE, value }),
+  onUpdateReference: (value) =>
+    dispatch({ type: UPDATE_SMS_REFERENCE, value }),
 });
 
 
 
 class Dashboard extends Component {
 
+  constructor() {
+    super()
+    const updateFieldEvent = key => ev => this.props.onUpdateField(key, ev.target.value);
+    this.changeSearchMsisdn = updateFieldEvent('changeSearchMsisdn')
+    this.changeSearchCount = updateFieldEvent('changeSearchCount')
+    this.changeSearchJumlah = updateFieldEvent('changeSearchJumlah')
+    this.changeStatus = updateFieldEvent('changeStatus')
+    this.changeselectedMSISDN = updateFieldEvent('selectedMSISDN')
+    this.changePage = (value) => ev => {
+      ev.preventDefault()
+      this.props.onChangePage(value)
+    }
+    this.updateReference = (value) => {
+      let param = {
+        msisdn: '',
+        updater: window.localStorage.getItem('user').substring(1, window.localStorage.getItem('user').length - 1),
+        status: this.props.sms.changeStatus
+      }
+      let arr = value.split(',')
+      let arrResult = []
+      arr.forEach(element => {
+        let newJson = JSON.parse(JSON.stringify(param))
+        newJson.msisdn = element
+        arrResult.push(newJson)
+      })
+      this.clearCheckbox()
+      const res = agent.Sms.updateReference(arrResult)
+      this.props.onUpdateReference(res)
+    }
+  }
+
   componentWillMount() {
-    this.props.onLoad(Promise.all([agent.Sms.getPenipu(0, 100)]))
+    this.props.onLoad(Promise.all([agent.Sms.getPenipu(0, 10), agent.Sms.countPenipu()]))
   }
   componentWillUnmount() {
     this.props.onUnload();
   }
 
+  checkboxEvent = (param, existingValue, isChecked, value) => {
+    let arr = existingValue.split(',')
+    if (isChecked) {
+      arr.push(value)
+    } else {
+      // remove
+      delete arr[arr.indexOf(value)]
+    }
+    if (arr[0] === "") {
+      arr.splice(0, 1)
+    }
+    let payload = arr.join()
+    this.props.onUpdateField(param, payload)
+  }
+
+  clearCheckbox = () => {
+    // to be implemented
+    document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false)
+    this.props.onUpdateField('selectedMSISDN', '')
+  }
+
   render() {
+
+    const updateSms = () => {
+      if (this.props.sms.selectedMSISDN) {
+        confirmAlert({
+          title: `Update Penipu`,
+          message: `Update status Penipu ${this.props.sms.selectedMSISDN} to  ${this.props.sms.changeStatus}`,
+          buttons: [
+            {
+              label: 'Yes',
+              onClick: () => { this.updateReference(this.props.sms.selectedMSISDN) }
+            },
+            {
+              label: 'No',
+              onClick: () => { }
+            }
+          ]
+        })
+      } else {
+        confirmAlert({
+          title: `Update Penipu`,
+          message: `Please select the MSISDN above`,
+          buttons: [
+            {
+              label: 'Ok',
+              onClick: () => { }
+            }
+          ]
+        })
+
+      }
+    }
 
     const u = window.localStorage.getItem('user')
     if (u === 'undefined' || !u) {
@@ -45,27 +138,59 @@ class Dashboard extends Component {
     if (!this.props.sms.listPenipu) {
       return null;
     }
-    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "Action"]
+    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "Pilih"]
+
+    const selectedMSISDN = this.props.sms.selectedMSISDN ? this.props.sms.selectedMSISDN : ''
+
+    const searchMsisdn = this.props.sms.changeSearchMsisdn ? this.props.sms.changeSearchMsisdn : ''
+    const searchJumlah = this.props.sms.changeSearchJumlah ? this.props.sms.changeSearchJumlah : 0
+
+    let issearchJumlah = true
+    let issearchMsisdn = true
 
     let arraySms = []
-    let index = 1
-    this.props.sms.listPenipu.forEach((u, idx) => {
+    let index = 1 * +this.props.sms.currentPage * +this.props.sms.changeSearchCount - (+this.props.sms.changeSearchCount - 1)
+    const limit = +this.props.sms.changeSearchCount
+    let increment = 0
+    let firstIdx = index
+    let lastIdx = index + +this.props.sms.changeSearchCount
+    let counterElm = 0
+
+    this.props.sms.listPenipu.some((u, idx) => {
       let arr = []
-      arr[0] = index++
-      arr[1] = u.msisdn_penipu
-      arr[2] = u.jumlah_pelapor
-      arraySms[idx] = arr
+
+      if (searchMsisdn) {
+        if (String(u.msisdn_penipu).indexOf(searchMsisdn) < 0) {
+          issearchMsisdn = false
+        }
+      }
+
+      if (searchJumlah > 0) {
+        if (+searchJumlah !== +u.jumlah_pelapor) {
+          issearchJumlah = false
+        }
+      }
+
+      if (issearchJumlah && issearchMsisdn) {
+        counterElm++
+        if (counterElm >= firstIdx && counterElm < lastIdx) {
+          increment++
+          arr[0] = index++
+          arr[1] = u.msisdn_penipu
+          arr[2] = u.jumlah_pelapor
+          arraySms[idx] = arr
+        }
+      }
+
+      issearchJumlah = true
+      issearchMsisdn = true
+      return increment === limit
     });
 
     return (
       <div className="content">
-        <div className="col-md-12" style={{ marginBottom: 15 + 'px' }}>
+        <div style={{ marginBottom: 15 + 'px' }}>
           {/* <p>{this.props.user.errors ? <font color="red">{this.props.user.errors}</font> : ""}</p> */}
-          <Link to="/newCategory">
-            <Button bsStyle="info" fill type="submit">
-              New Entry
-            </Button>
-          </Link>
         </div>
         <br />
         <Grid fluid>
@@ -80,6 +205,43 @@ class Dashboard extends Component {
                   <Table striped hover style={{ textAlign: 'center' }}>
                     <thead>
                       <tr>
+                        <th>
+                          <FormGroup>
+                            <ControlLabel>Show</ControlLabel>
+                            <FormControl componentClass="select" defaultValue={this.props.sms.changeSearchCount} onChange={this.changeSearchCount} >
+                              <option value={10} key={10}>10</option>
+                              <option value={25} key={25}>25</option>
+                              <option value={50} key={50}>50</option>
+                              <option value={100} key={100}>100</option>
+                            </FormControl>
+                          </FormGroup>
+                        </th>
+                        <th>
+                          <FormGroup controlId="formControlsUploadFiles">
+                            <ControlLabel>MSISDN</ControlLabel>
+                            <FormControl
+                              type="text"
+                              defaultValue={this.props.sms.changeSearchMsisdn}
+                              onChange={this.changeSearchMsisdn}
+                              placeholder="msisdn"
+                              autoComplete="off"
+                            />
+                          </FormGroup>
+                        </th>
+                        <th>
+                          <FormGroup controlId="formControlsUploadFiles">
+                            <ControlLabel>Jumlah Laporan</ControlLabel>
+                            <FormControl
+                              type="number"
+                              defaultValue={this.props.sms.changeSearchJumlah}
+                              onChange={this.changeSearchJumlah}
+                              placeholder="msisdn"
+                              autoComplete="off"
+                            />
+                          </FormGroup>
+                        </th>
+                      </tr>
+                      <tr>
                         {smsTable.map((prop, key) => {
                           return <th key={key} style={{ textAlign: 'center' }}>{prop}</th>;
                         })}
@@ -89,21 +251,25 @@ class Dashboard extends Component {
                       {arraySms.map((prop, key) => {
                         return (
                           <tr key={key}>
-                            {prop.map((prop, key) => {
-                              return <td key={key}>{prop}</td>;
+                            {prop.map((p, k) => {
+                              if (k === 1) {
+                                return <td key={k}><Link to={`/view/penipu/${p}`}>
+                                  {p}
+                                </Link></td>;
+                              } else {
+                                return <td key={k}>{p}</td>;
+                              }
                             })}
                             {/* button action */}
                             <td key={key}>
-                              <Link to={`/view/penipu/${arraySms[key][1]}`}>
-                                <Button bsStyle="info" fill type="submit" style={{ marginRight: 5 + 'px' }}>
-                                  view
-                              </Button>
-                              </Link>
-                              <Link to={`/update/penipu/${arraySms[key][1]}`}>
+                              {/* <Link to={`/update/penipu/${arraySms[key][1]}`}>
                                 <Button bsStyle="default" fill type="submit" style={{ marginRight: 5 + 'px' }}>
                                   update
                               </Button>
-                              </Link>
+                              </Link> */}
+                              <FormGroup>
+                                <Checkbox inline onClick={e => this.checkboxEvent('selectedMSISDN', selectedMSISDN, e.target.checked, arraySms[key][1])}></Checkbox>
+                              </FormGroup>
                             </td>
                           </tr>
                         );
@@ -112,10 +278,45 @@ class Dashboard extends Component {
                   </Table>
                 }
               />
+              <div className="col-md-12">
+                <div className="col-md-4">
+                  <Pagination style={{ margin: "5px 0px" }}>
+                    <Pagination.First onClick={this.changePage('first')} />
+                    <Pagination.Prev onClick={this.changePage('prev')} />
+                    <Pagination.Item active>{this.props.sms.currentPage}</Pagination.Item>
+                    <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 1)}>{(this.props.sms.currentPage + 1)}</Pagination.Item>
+                    <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 2)}>{(this.props.sms.currentPage + 2)}</Pagination.Item>
+                    <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 3)}>{(this.props.sms.currentPage + 3)}</Pagination.Item>
+                    <Pagination.Ellipsis />
+                    <Pagination.Item onClick={this.changePage(this.props.sms.page)}>{this.props.sms.page}</Pagination.Item>
+                    <Pagination.Next onClick={this.changePage('next')} />
+                    <Pagination.Last onClick={this.changePage('last')} />
+                  </Pagination>
+                </div>
+                <div className="col-md-1"></div>
+                <div className="col-md-4">
+                  <FormGroup>
+                    <FormControl componentClass="select" defaultValue={this.props.sms.changeStatus} onChange={this.changeStatus} >
+                      <option value={'Follow Up'} key={10}>Follow Up</option>
+                      <option value={'Blocked'} key={100}>Blocked</option>
+                    </FormControl>
+                  </FormGroup>
+                </div>
+                <div className="col-md-1" style={{ padding: 'initial' }}>
+                  <Button bsStyle="info" fill type="submit" onClick={updateSms}>
+                    Update
+                </Button>
+                </div>
+                <div className="col-md-2" style={{ padding: 'initial' }}>
+                  <Button bsStyle="danger" fill type="submit" onClick={this.clearCheckbox}>
+                    Clear Selected
+                </Button>
+                </div>
+              </div>
             </Col>
           </Row>
         </Grid>
-      </div>
+      </div >
     );
   }
 }

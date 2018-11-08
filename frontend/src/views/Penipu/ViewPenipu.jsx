@@ -89,7 +89,7 @@ class ViewPenipu extends Component {
                     <Link to="/home">
                         <Button bsStyle="info" fill type="submit">
                             Back
-        </Button>
+                        </Button>
                     </Link>
                 </div>
                 </Row>

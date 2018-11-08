@@ -5,7 +5,13 @@ import {
     UPDATE_DETAIL_SMS_PAGE_UNLOADED,
     GET_REFERENCE_SMS_BY_MSISDN,
     UPDATE_FIELD_SMS,
-    UPDATE_SMS_REFERENCE
+    UPDATE_SMS_REFERENCE,
+    UPDATE_SEARCH_SMS,
+    UPDATE_SEARCH_SMS_PAGE,
+    INSERT_DETAIL_SMS_PAGE_LOADED,
+    INSERT_DETAIL_SMS_PAGE_UNLOADED,
+    INSERT_DETAIL_SMS_UPDATE,
+    INSERT_DETAIL_SMS
 } from '../constants/actionTypes';
 
 export default (state = {}, action) => {
@@ -14,8 +20,14 @@ export default (state = {}, action) => {
             return {
                 ...state,
                 listPenipu: action.payload[0],
-                page: 1,
-                limit: 100
+                countPenipu: action.payload[1][0].jumlah,
+                currentPage: 1,
+                page: action.payload[1][0].jumlah / 10,
+                changeSearchCount: 10,
+                changeSearchMsisdn: '',
+                changeSearchJumlah: 0,
+                changeStatus: 'Follow Up',
+                redirect: ''
             }
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
@@ -27,14 +39,53 @@ export default (state = {}, action) => {
                 ...state,
                 reference: action.payload[0]
             }
+        case UPDATE_SEARCH_SMS_PAGE:
+            switch (action.value) {
+                case 'first':
+                    return { ...state,
+                        currentPage: 1
+                    };
+                case 'last':
+                    return { ...state,
+                        currentPage: state.page
+                    };
+                case 'next':
+                    return { ...state,
+                        currentPage: state.currentPage === state.page ? state.page : state.currentPage + 1
+                    };
+                case 'prev':
+                    return { ...state,
+                        currentPage: state.currentPage === 1 ? 1 : state.currentPage - 1
+                    };
+                default:
+                    return { ...state,
+                        currentPage: +action.value
+                    };
+
+            }
+        case INSERT_DETAIL_SMS:
+            return { ...state,
+                redirect: '/home'
+            };
+        case INSERT_DETAIL_SMS_UPDATE:
+        case UPDATE_SEARCH_SMS:
         case UPDATE_FIELD_SMS:
             return { ...state,
-                [action.key]: action.value
+                [action.key]: action.value,
+                page: action.key === 'changeSearchCount' ? state.countPenipu / action.value : state.page
             };
         case UPDATE_SMS_REFERENCE:
             return { ...state,
-                hasil: action.payload
+                hasil: action.payload,
+                selectedMSISDN: ''
             };
+        case INSERT_DETAIL_SMS_PAGE_LOADED:
+            return { ...state,
+                pelapor: '',
+                target: '',
+                content: '',
+            };
+        case INSERT_DETAIL_SMS_PAGE_UNLOADED:
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
         case UPDATE_DETAIL_SMS_PAGE_UNLOADED:
         default:
