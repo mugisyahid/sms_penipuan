@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { Grid, Row, Col, Table, FormGroup, ControlLabel, FormControl, Checkbox, Pagination } from "react-bootstrap";
+import {
+  Grid, Row, Col, Table, FormGroup,
+  ControlLabel, FormControl, Checkbox, Pagination,
+  Modal
+} from "react-bootstrap";
 import Card from "../../components/Card/Card";
 import Button from "../../components/CustomButton/CustomButton";
 import { connect } from 'react-redux';
@@ -13,7 +17,8 @@ import {
   HOME_PAGE_LOADED,
   UPDATE_SEARCH_SMS,
   UPDATE_SEARCH_SMS_PAGE,
-  UPDATE_SMS_REFERENCE
+  UPDATE_SMS_REFERENCE,
+  POP_UP_MODAL
 } from '../../constants/actionTypes';
 
 const mapStateToProps = state => ({
@@ -32,6 +37,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: UPDATE_SEARCH_SMS_PAGE, value }),
   onUpdateReference: (value) =>
     dispatch({ type: UPDATE_SMS_REFERENCE, value }),
+  onPopup: (value, arr) =>
+    dispatch({ type: POP_UP_MODAL, value, arr }),
 });
 
 
@@ -63,6 +70,7 @@ class Dashboard extends Component {
         newJson.msisdn = element
         arrResult.push(newJson)
       })
+      this.handleShow(arrResult)
       this.clearCheckbox()
       const res = agent.Sms.updateReference(arrResult)
       this.props.onUpdateReference(res)
@@ -97,8 +105,17 @@ class Dashboard extends Component {
     this.props.onUpdateField('selectedMSISDN', '')
   }
 
-  render() {
 
+  handleClose = () => {
+    this.props.onPopup(false, null)
+  }
+
+  handleShow = (value) => {
+    this.props.onPopup(true, value)
+  }
+
+
+  render() {
     const updateSms = () => {
       if (this.props.sms.selectedMSISDN) {
         confirmAlert({
@@ -185,7 +202,21 @@ class Dashboard extends Component {
       issearchJumlah = true
       issearchMsisdn = true
       return increment === limit
-    });
+    })
+
+    let arrayResult = []
+    const resultTable = ["No", "MSISDN", "Status", "Updater"]
+    if (typeof this.props.sms.result !== 'undefined' && this.props.sms.result) {
+      let index2 = 1
+      this.props.sms.result.forEach((u, idx) => {
+        let arr = []
+        arr[0] = index2++
+        arr[1] = u.msisdn
+        arr[2] = u.status
+        arr[3] = u.updater
+        arrayResult[idx] = arr
+      })
+    }
 
     return (
       <div className="content">
@@ -316,6 +347,52 @@ class Dashboard extends Component {
             </Col>
           </Row>
         </Grid>
+
+        <Modal show={this.props.sms.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Update Report</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Grid fluid>
+              <Row>
+                <Col md={12}>
+                  <Card
+                    title="Result List"
+                    category=""
+                    ctTableFullWidth
+                    ctTableResponsive
+                    content={
+                      <Table striped hover style={{ textAlign: 'center' }}>
+                        <thead>
+                          <tr>
+                            {resultTable.map((prop, key) => {
+                              return <th key={key} style={{ textAlign: 'center' }}>{prop}</th>;
+                            })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {arrayResult.map((prop, key) => {
+                            return (
+                              <tr key={key}>
+                                {prop.map((p, k) => {
+                                  return <td key={k}>{p}</td>;
+                                })}
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </Table>
+                    }
+                  />
+                </Col>
+              </Row>
+            </Grid>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.handleClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+
       </div >
     );
   }
