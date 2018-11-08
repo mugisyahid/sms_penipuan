@@ -302,14 +302,14 @@ class Dashboard extends Component {
                     </FormControl>
                   </FormGroup>
                 </div>
-                <div className="col-md-2" style={{ padding: 'initial' }}>
-                  <Button bsStyle="info" fill type="submit" onClick={this.clearCheckbox}>
-                    Clear Selected
-                </Button>
-                </div>
                 <div className="col-md-1" style={{ padding: 'initial' }}>
                   <Button bsStyle="info" fill type="submit" onClick={updateSms}>
                     Update
+                </Button>
+                </div>
+                <div className="col-md-2" style={{ padding: 'initial' }}>
+                  <Button bsStyle="danger" fill type="submit" onClick={this.clearCheckbox}>
+                    Clear Selected
                 </Button>
                 </div>
               </div>
