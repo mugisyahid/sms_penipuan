@@ -25,7 +25,7 @@ class Footer extends Component {
           <p className="copyright pull-right">
             Copyright
             &copy; {new Date().getFullYear()}{" "}
-            – CCM Telkomsel
+            – Ligar Mugi Syahid
           </p>
         </Grid>
       </footer>
