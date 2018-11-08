@@ -79,3 +79,5 @@ node_modules
 backend/var/log/
 
 *.sh
+
+*.tgz

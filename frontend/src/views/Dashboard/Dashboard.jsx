@@ -155,7 +155,7 @@ class Dashboard extends Component {
     if (!this.props.sms.listPenipu) {
       return null;
     }
-    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "Pilih"]
+    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "status", "Pilih"]
 
     const selectedMSISDN = this.props.sms.selectedMSISDN ? this.props.sms.selectedMSISDN : ''
 
@@ -195,6 +195,7 @@ class Dashboard extends Component {
           arr[0] = index++
           arr[1] = u.msisdn_penipu
           arr[2] = u.jumlah_pelapor
+          arr[3] = u.status
           arraySms[idx] = arr
         }
       }
