@@ -77,3 +77,5 @@ node_modules
 *audit.json
 
 backend/var/log/
+
+*.sh
