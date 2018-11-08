@@ -6,8 +6,9 @@ function getListPenipu(callback) {
 }
 
 function insertDetail(body, callback) {
-    var query = "insert into t_sms_penipu(msisdn_target,msisdn_pelapor,content,date_system,uploader,source) " +
-        "values (${body.msisdn_target},${body.msisdn_pelapor},'${body.content}',NOW(),'${body.uploader}','${body.source}')"
+    const query = `insert into t_sms_penipu(msisdn_target,msisdn_pelapor,content,date_system,uploader,source) 
+    values ('${body.msisdn_target}','${body.msisdn_pelapor}','${body.content}',NOW(),'${body.uploader}','${body.source}')`
+    logger.debug(query)
     kon.ekse(query, callback)
 }
 
