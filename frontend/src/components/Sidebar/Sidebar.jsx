@@ -44,7 +44,6 @@ class Sidebar extends Component {
       return <Redirect to='/login' />;
     }
 
-
     const sidebarBackground = {
       backgroundImage: "url(" + imagine + ")"
     };
@@ -58,7 +57,7 @@ class Sidebar extends Component {
         <div className="sidebar-background" style={sidebarBackground} />
         <div className="logo">
           <a
-            href="localhost:4000/sms_penipuan/home"
+            href={process.env.REACT_APP_PUBLIC_URL + '/home'}
             className="simple-text logo-mini"
           >
             <div className="logo-img">
@@ -66,7 +65,7 @@ class Sidebar extends Component {
             </div>
           </a>
           <a
-            href="localhost:4000/sms_penipuan/home"
+            href={process.env.REACT_APP_PUBLIC_URL + '/home'}
             className="simple-text logo-normal"
           >
             SMS Penipuan
