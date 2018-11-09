@@ -1,7 +1,7 @@
 {
-  "name": "api_aisha",
+  "name": "sms_penipuan_backend",
   "version": "1.0.0",
-  "description": "Api FSM to Channel",
+  "description": "Web System SMS Penipuan",
   "main": "app.js",
   "scripts": {
     "start": "node ./app.js",

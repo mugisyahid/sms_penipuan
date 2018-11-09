@@ -5,7 +5,7 @@ function getPenipu(f, t, callback) {
     kon.ekse(`SELECT * from d_summary_penipu order by jumlah_pelapor limit ${f}, ${t}`, callback)
 }
 function getAllPenipu(callback) {
-    kon.ekse(`SELECT * from d_summary_penipu order by jumlah_pelapor`, callback)
+    kon.ekse(`select a.*,b.status from d_summary_penipu a LEFT JOIN reference_penipu b on a.msisdn_penipu = b.msisdn`, callback)
 }
 
 function count(callback) {
