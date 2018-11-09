@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 
 import HeaderLinks from "../Header/HeaderLinks.jsx";
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import imagine from "../../assets/img/sidebar-3.jpg";
 import logo from "../../assets/img/reactlogo.png";
@@ -56,20 +56,20 @@ class Sidebar extends Component {
       >
         <div className="sidebar-background" style={sidebarBackground} />
         <div className="logo">
-          <a
-            href={process.env.REACT_APP_PUBLIC_URL + '/home'}
-            className="simple-text logo-mini"
-          >
-            <div className="logo-img">
-              <img src={logo} alt="logo_image" />
-            </div>
+          <Link to="/home">
+            <a
+              className="simple-text logo-mini"
+            >
+              <div className="logo-img">
+                <img src={logo} alt="logo_image" />
+              </div>
+            </a>
+            <a
+              className="simple-text logo-normal"
+            >
+              SMS Penipuan
           </a>
-          <a
-            href={process.env.REACT_APP_PUBLIC_URL + '/home'}
-            className="simple-text logo-normal"
-          >
-            SMS Penipuan
-          </a>
+          </Link>
         </div>
         <div className="sidebar-wrapper">
           <ul className="nav">
