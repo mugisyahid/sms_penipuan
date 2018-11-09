@@ -42,7 +42,7 @@ class Dashboard extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Sms Penipuaning</b> - Tsel
+          Welcome to <b>Sms Penipuan</b> - Tsel
         </div>
       ),
       level: level,
@@ -75,7 +75,7 @@ class Dashboard extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Sms Penipuaning</b> - Tsel
+          Welcome to <b>Sms Penipuan</b> - Tsel
         </div>
       ),
       level: level,

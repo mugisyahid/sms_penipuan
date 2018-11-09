@@ -6,9 +6,10 @@
  const router = require('express').Router()
  const logger = require('../../service/logger')
  const ldap = require('../../modul/auth/ldap')
- const jwt = require('jsonwebtoken') 
- 
-const config = require('../../config/config_all')
+ const jwt = require('jsonwebtoken')
+
+ const config = require('../../config/config_all')
+ const moment = require('moment')
 
 
  router.post('/login', function (req, res) {
@@ -42,7 +43,8 @@ const config = require('../../config/config_all')
                  res.status(200).send({
                      auth: true,
                      token: token,
-                     user: req.body.username
+                     user: req.body.username,
+                     expiredDate: moment().add(1440 / config.token.expired, 'minutes').valueOf()
                  })
              }
          })
@@ -58,7 +60,8 @@ const config = require('../../config/config_all')
          res.status(200).send({
              auth: true,
              token: token,
-             user: req.body.username
+             user: req.body.username,
+             expiredDate: moment().add(1440 / config.token.expired, 'minutes').valueOf()
          })
      }
  })

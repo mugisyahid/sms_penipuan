@@ -4,7 +4,7 @@ import _superagent from 'superagent';
 
 const superagent = superagentPromise(_superagent, global.Promise);
 
-const API_ROOT = process.env.NODE_ENV === 'production' ? 'http://localhost:4000' : 'http://localhost:4000';
+const API_ROOT = process.env.REACT_APP_SERVER
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
