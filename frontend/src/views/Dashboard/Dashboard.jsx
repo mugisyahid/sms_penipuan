@@ -51,6 +51,7 @@ class Dashboard extends Component {
     this.changeSearchMsisdn = updateFieldEvent('changeSearchMsisdn')
     this.changeSearchCount = updateFieldEvent('changeSearchCount')
     this.changeSearchJumlah = updateFieldEvent('changeSearchJumlah')
+    this.changeSearchStatus = updateFieldEvent('changeSearchStatus')
     this.changeStatus = updateFieldEvent('changeStatus')
     this.changeselectedMSISDN = updateFieldEvent('selectedMSISDN')
     this.changePage = (value) => ev => {
@@ -161,9 +162,11 @@ class Dashboard extends Component {
 
     const searchMsisdn = this.props.sms.changeSearchMsisdn ? this.props.sms.changeSearchMsisdn : ''
     const searchJumlah = this.props.sms.changeSearchJumlah ? this.props.sms.changeSearchJumlah : 0
+    const searchStatus = this.props.sms.changeSearchStatus ? this.props.sms.changeSearchStatus : 'All'
 
     let issearchJumlah = true
     let issearchMsisdn = true
+    let issearchStatus = true
 
     let arraySms = []
     let index = 1 * +this.props.sms.currentPage * +this.props.sms.changeSearchCount - (+this.props.sms.changeSearchCount - 1)
@@ -173,6 +176,8 @@ class Dashboard extends Component {
     let lastIdx = index + +this.props.sms.changeSearchCount
     let counterElm = 0
 
+    console.log(searchStatus)
+    console.log(searchStatus === "Empty")
     this.props.sms.listPenipu.some((u, idx) => {
       let arr = []
 
@@ -182,13 +187,23 @@ class Dashboard extends Component {
         }
       }
 
+      if (searchStatus !== "All") {
+        if (searchStatus === "Empty") {
+          if (String(u.status) !== "") {
+            issearchStatus = false
+          }
+        } else if (String(u.status).indexOf(searchStatus) < 0) {
+          issearchStatus = false
+        }
+      }
+
       if (searchJumlah > 0) {
         if (+searchJumlah !== +u.jumlah_pelapor) {
           issearchJumlah = false
         }
       }
 
-      if (issearchJumlah && issearchMsisdn) {
+      if (issearchJumlah && issearchMsisdn && issearchStatus) {
         counterElm++
         if (counterElm >= firstIdx && counterElm < lastIdx) {
           increment++
@@ -202,6 +217,7 @@ class Dashboard extends Component {
 
       issearchJumlah = true
       issearchMsisdn = true
+      issearchStatus = true
       return increment === limit
     })
 
@@ -272,6 +288,17 @@ class Dashboard extends Component {
                             />
                           </FormGroup>
                         </th>
+                        <th>
+                          <FormGroup>
+                            <ControlLabel>Status</ControlLabel>
+                            <FormControl componentClass="select" defaultValue={this.props.sms.changeSearchStatus} onChange={this.changeSearchStatus} >
+                              <option value={'All'} key={5}>All</option>
+                              <option value={'Empty'} key={10}>Empty</option>
+                              <option value={'Follow Up'} key={25}>Follow Up</option>
+                              <option value={'Blocked'} key={50}>Blocked</option>
+                            </FormControl>
+                          </FormGroup>
+                        </th>
                       </tr>
                       <tr>
                         {smsTable.map((prop, key) => {
@@ -318,7 +345,6 @@ class Dashboard extends Component {
                     <Pagination.Item active>{this.props.sms.currentPage}</Pagination.Item>
                     <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 1)}>{(this.props.sms.currentPage + 1)}</Pagination.Item>
                     <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 2)}>{(this.props.sms.currentPage + 2)}</Pagination.Item>
-                    <Pagination.Item onClick={this.changePage(this.props.sms.currentPage + 3)}>{(this.props.sms.currentPage + 3)}</Pagination.Item>
                     <Pagination.Ellipsis />
                     <Pagination.Item onClick={this.changePage(this.props.sms.page)}>{this.props.sms.page}</Pagination.Item>
                     <Pagination.Next onClick={this.changePage('next')} />

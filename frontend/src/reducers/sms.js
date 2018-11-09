@@ -23,11 +23,12 @@ export default (state = {}, action) => {
                 listPenipu: action.payload[0],
                 countPenipu: action.payload[1][0].jumlah,
                 currentPage: 1,
-                page: action.payload[1][0].jumlah / 10,
+                page: Math.ceil(action.payload[1][0].jumlah / 10),
                 changeSearchCount: 10,
                 changeSearchMsisdn: '',
                 changeSearchJumlah: 0,
                 changeStatus: 'Follow Up',
+                changeSearchStatus: 'All',
                 redirect: '',
                 show: false
             }
@@ -70,11 +71,15 @@ export default (state = {}, action) => {
                 redirect: '/home'
             };
         case INSERT_DETAIL_SMS_UPDATE:
+            return { ...state,
+                [action.key]: action.value,
+                isFirst: false                
+            };
         case UPDATE_SEARCH_SMS:
         case UPDATE_FIELD_SMS:
             return { ...state,
                 [action.key]: action.value,
-                page: action.key === 'changeSearchCount' ? state.countPenipu / action.value : state.page
+                page: action.key === 'changeSearchCount' ? Math.ceil(state.countPenipu / action.value) : state.page
             };
         case UPDATE_SMS_REFERENCE:
             return { ...state,
@@ -86,6 +91,7 @@ export default (state = {}, action) => {
                 pelapor: '',
                 target: '',
                 content: '',
+                isFirst: true
             };
         case POP_UP_MODAL:
             return { ...state,
