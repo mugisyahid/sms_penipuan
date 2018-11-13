@@ -5,6 +5,7 @@ import _superagent from 'superagent';
 const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT = process.env.REACT_APP_SERVER
+const API_LOGIN = process.env.REACT_APP_LOGIN_SERVER
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
@@ -39,10 +40,10 @@ const Auth = {
   current: () =>
     requests.get('/user'),
   login: (username, password) =>
-    requests.post('/auth/login', {
+    superagent.post(`${API_LOGIN}/auth/login`, {
       username: username,
       password: password
-    }),
+    }).use(tokenPlugin).then(responseBody),
   register: (username, email, password) =>
     requests.post('/users', {
       user: {

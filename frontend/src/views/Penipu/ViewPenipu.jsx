@@ -25,7 +25,9 @@ const mapDispatchToProps = dispatch => ({
 class ViewPenipu extends Component {
 
     componentWillMount() {
-        this.props.onLoad(Promise.all([agent.Sms.getDetailSMS(this.props.location.pathname.replace('/view/penipu/', ''))]))
+        const target = this.props.location.pathname.replace('/view/penipu/', '')
+        const msisdn = target.indexOf('62') === 0 ? target.substring(2, target.length) : target.substring(1, target.length)
+        this.props.onLoad(Promise.all([agent.Sms.getDetailSMS(msisdn)]))
     }
     componentWillUnmount() {
         this.props.onUnload();
@@ -45,8 +47,7 @@ class ViewPenipu extends Component {
             arr[2] = u.msisdn_pelapor
             arr[3] = u.content
             arr[4] = moment(u.date_system).format('hh:mm, DD MMM YYYY')
-            arr[5] = u.uploader
-            arr[6] = u.source
+            arr[5] = u.source
             arraySms[idx] = arr
         });
 

@@ -176,8 +176,6 @@ class Dashboard extends Component {
     let lastIdx = index + +this.props.sms.changeSearchCount
     let counterElm = 0
 
-    console.log(searchStatus)
-    console.log(searchStatus === "Empty")
     this.props.sms.listPenipu.some((u, idx) => {
       let arr = []
 

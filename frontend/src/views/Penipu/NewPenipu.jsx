@@ -48,8 +48,8 @@ class NewPenipu extends Component {
         this.submitForm = (target, pelapor, content) => ev => {
             ev.preventDefault()
             const param = {
-                msisdn_target: target,
-                msisdn_pelapor: pelapor,
+                msisdn_target: target /*target.indexOf('62') === 0 ? target.substring(2, target.length) : target.substring(1, target.length)*/,
+                msisdn_pelapor: target /*pelapor.indexOf('62') === 0 ? pelapor.substring(2, pelapor.length) : pelapor.substring(1, pelapor.length)*/,
                 content: content,
                 uploader: window.localStorage.getItem('user').substring(1, window.localStorage.getItem('user').length - 1),
                 source: 'webapps'
@@ -74,7 +74,7 @@ class NewPenipu extends Component {
 
     validateNumber(value) {
         if (value) {
-            const re = /^(?:62|\(0\d{2,3}\)|08)\s?(?:08\s?\d?)?(?:[ -]?\d{4,8}){2,6}$/;
+            const re = /^(?:62|\(0\d{2,3}\))\s?(?:08\s?\d?)?(?:[ -]?\d{4,8}){2,6}$/;
             if (re.test(String(value).toLowerCase())) { return 'success'; }
             else { return 'error'; }
         } else {
@@ -121,7 +121,7 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
-                                                {!isFirst && target && validationTarget ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
+                                                {!isFirst && target && validationTarget ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup controlId="formControlsUploadFiles"
@@ -135,7 +135,7 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
-                                                {!isFirst && pelapor && validationPelapor ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
+                                                {!isFirst && pelapor && validationPelapor ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                         </Row>
                                         <Row>
