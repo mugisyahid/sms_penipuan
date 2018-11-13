@@ -18,7 +18,8 @@ import {
   UPDATE_SEARCH_SMS,
   UPDATE_SEARCH_SMS_PAGE,
   UPDATE_SMS_REFERENCE,
-  POP_UP_MODAL
+  POP_UP_MODAL,
+  RELOAD_HOME_PAGE
 } from '../../constants/actionTypes';
 
 const mapStateToProps = state => ({
@@ -29,6 +30,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onLoad: (payload) =>
     dispatch({ type: HOME_PAGE_LOADED, payload }),
+  onReload: () =>
+    dispatch({ type: RELOAD_HOME_PAGE }),
   onUnload: () =>
     dispatch({ type: HOME_PAGE_UNLOADED }),
   onUpdateField: (key, value) =>
@@ -117,6 +120,11 @@ class Dashboard extends Component {
 
 
   render() {
+
+    if (this.props.sms.reload) {
+      window.location.reload()
+    }
+
     const updateSms = () => {
       if (this.props.sms.selectedMSISDN) {
         confirmAlert({

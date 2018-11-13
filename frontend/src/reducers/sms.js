@@ -73,7 +73,7 @@ export default (state = {}, action) => {
         case INSERT_DETAIL_SMS_UPDATE:
             return { ...state,
                 [action.key]: action.value,
-                isFirst: false                
+                isFirst: false
             };
         case UPDATE_SEARCH_SMS:
         case UPDATE_FIELD_SMS:
@@ -96,9 +96,13 @@ export default (state = {}, action) => {
         case POP_UP_MODAL:
             return { ...state,
                 show: action.value,
-                result: action.arr
+                result: action.arr,
+                reload: !action.value
             };
         case INSERT_DETAIL_SMS_PAGE_UNLOADED:
+            return { ...state,
+                reload: true
+            };
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
         case UPDATE_DETAIL_SMS_PAGE_UNLOADED:
         default:
