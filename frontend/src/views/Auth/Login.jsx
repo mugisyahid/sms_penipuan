@@ -53,7 +53,7 @@ class Login extends Component {
                 <div className="container page">
                     <div className="row">
                         <div className="col-md-6 offset-md-3 col-xs-12">
-                            <h1 className="text-xs-center">Login SMS Penipu</h1>
+                            <h1 className="text-xs-center">Login SMS Penipuan</h1>
                             <p className="text-xs-center">
                             </p>
                             <p>{this.props.auth.errors ? <font face="verdana" color="red">{this.props.auth.errors}</font> : ""}</p>

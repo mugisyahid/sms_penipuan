@@ -3,7 +3,8 @@ import {
     Grid, Row, Col,
     FormControl,
     FormGroup,
-    ControlLabel
+    ControlLabel,
+    HelpBlock
 } from "react-bootstrap";
 import { connect } from 'react-redux';
 // import agent from '../../agent';
@@ -66,9 +67,22 @@ class NewPenipu extends Component {
     componentWillUnmount() {
         this.props.onUnload()
     }
+
+    validationSuccess(value) {
+        return value !== 'success'
+    }
+
+    validateNumber(value) {
+        if (value) {
+            const re = /^(?:62|\(0\d{2,3}\)|08)\s?(?:08\s?\d?)?(?:[ -]?\d{4,8}){2,6}$/;
+            if (re.test(String(value).toLowerCase())) { return 'success'; }
+            else { return 'error'; }
+        } else {
+            return null;
+        }
+    }
+
     render() {
-
-
         if (this.props.sms.redirect) {
             return <Redirect to={this.props.sms.redirect} />;
         }
@@ -76,6 +90,14 @@ class NewPenipu extends Component {
         const pelapor = this.props.sms.pelapor
         const target = this.props.sms.target
         const content = this.props.sms.content
+
+        const isFirst = this.props.sms.isFirst
+
+        const validationTarget = this.validationSuccess(this.validateNumber(target))
+        const validationPelapor = this.validationSuccess(this.validateNumber(pelapor))
+        const validationContent = String(content).length > 0 ? false : true
+
+        const isNotSubmit = isFirst || validationTarget || validationPelapor || validationContent
 
         return (<div className="content">
             <div className="content">
@@ -88,7 +110,8 @@ class NewPenipu extends Component {
                                     <form onSubmit={this.submitForm(target, pelapor, content)}>
                                         <Row>
                                             <Col md={4}>
-                                                <FormGroup controlId="formControlsUploadFiles">
+                                                <FormGroup controlId="formControlsUploadFiles"
+                                                    validationState={this.validateNumber(target)}>
                                                     <ControlLabel>MSISDN Target</ControlLabel>
                                                     <FormControl
                                                         type="text"
@@ -98,9 +121,11 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
+                                                {!isFirst && target && validationTarget ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                             <Col md={4}>
-                                                <FormGroup controlId="formControlsUploadFiles">
+                                                <FormGroup controlId="formControlsUploadFiles"
+                                                    validationState={this.validateNumber(pelapor)}>
                                                     <ControlLabel>MSISDN Pelapor</ControlLabel>
                                                     <FormControl
                                                         type="text"
@@ -110,11 +135,13 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
+                                                {!isFirst && pelapor && validationPelapor ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col md={8}>
-                                                <FormGroup controlId="formControlsUploadFiles">
+                                                <FormGroup controlId="formControlsUploadFiles"
+                                                    validationState={validationContent ? 'error' : 'success'}>
                                                     <ControlLabel>Content</ControlLabel>
                                                     <FormControl
                                                         componentClass="textarea"
@@ -124,9 +151,10 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
+                                                {!isFirst && validationContent ? <HelpBlock>Fill the content of SMS</HelpBlock> : ''}
                                             </Col>
                                         </Row>
-                                        <Button bsStyle="info" pullRight fill type="submit">
+                                        <Button bsStyle="info" pullRight fill type="submit" disabled={isNotSubmit}>
                                             Submit
                                         </Button>
                                         <div className="clearfix" />

@@ -1,2 +1,2 @@
-# Sms Penipuaning Project
+# Sms Penipuan Project
 front end using react
