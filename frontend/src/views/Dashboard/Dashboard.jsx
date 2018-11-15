@@ -195,7 +195,7 @@ class Dashboard extends Component {
 
       if (searchStatus !== "All") {
         if (searchStatus === "Empty") {
-          if (String(u.status) !== "") {
+          if (u.status) {
             issearchStatus = false
           }
         } else if (String(u.status).indexOf(searchStatus) < 0) {
