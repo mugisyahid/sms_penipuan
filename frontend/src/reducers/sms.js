@@ -68,7 +68,6 @@ export default (state = {}, action) => {
             }
         case INSERT_DETAIL_SMS:
             return { ...state,
-                redirect: '/home'
             };
         case INSERT_DETAIL_SMS_UPDATE:
             return { ...state,
@@ -97,7 +96,8 @@ export default (state = {}, action) => {
             return { ...state,
                 show: action.value,
                 result: action.arr,
-                reload: !action.value
+                reload: !action.value,
+                redirect: !action.value ? '/home' : null
             };
         case INSERT_DETAIL_SMS_PAGE_UNLOADED:
             return { ...state,
