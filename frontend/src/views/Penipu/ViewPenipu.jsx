@@ -8,12 +8,13 @@ import { Link, Redirect, withRouter } from 'react-router-dom';
 
 import Card from "../../components/Card/Card.jsx";
 import Button from "../../components/CustomButton/CustomButton.jsx";
+import ReactLoading from "react-loading";
 
 import {
     VIEW_DETAIL_SMS_PAGE_UNLOADED,
     GET_DETAIL_SMS_BY_MSISDN
 } from '../../constants/actionTypes';
-111
+
 const mapStateToProps = state => ({ ...state, sms: state.sms });
 const mapDispatchToProps = dispatch => ({
     onLoad: (payload) =>
@@ -34,7 +35,23 @@ class ViewPenipu extends Component {
     }
     render() {
         if (!this.props.sms.detail) {
-            return null;
+            return (<div className="content">
+                <Grid fluid classNames="pagination-centered">
+                    <Row>
+                        <Col md={12}>
+                            <Card
+                                title="Detail Penipuan"
+                                category=""
+                                ctTableFullWidth
+                                ctTableResponsive
+                                content={
+                                    <div style={{ margin: 'auto', justifyContent: 'center', display: 'flex' }}> <ReactLoading type="spin" color="#000000" height={'3%'} width={'3%'} /> </div>
+                                }
+                            />
+                        </Col>
+                    </Row>
+                </Grid>
+            </div>)
         }
 
         const smsTable = ["Id", "target", "pelapor", "content", "date", "uploader", "source"]
