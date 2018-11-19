@@ -205,23 +205,23 @@ class Dashboard extends Component {
       let arr = []
 
       if (searchMsisdn) {
-        if (String(u.msisdn_penipu).indexOf(searchMsisdn) < 0) {
+        if (String(u.MSISDN_TARGET).indexOf(searchMsisdn) < 0) {
           issearchMsisdn = false
         }
       }
 
       if (searchStatus !== "All") {
         if (searchStatus === "Empty") {
-          if (u.status) {
+          if (u.STATUS) {
             issearchStatus = false
           }
-        } else if (String(u.status).indexOf(searchStatus) < 0) {
+        } else if (String(u.STATUS).indexOf(searchStatus) < 0) {
           issearchStatus = false
         }
       }
 
       if (searchJumlah > 0) {
-        if (+searchJumlah !== +u.jumlah_pelapor) {
+        if (+searchJumlah !== +u.JUMLAH_PELAPOR) {
           issearchJumlah = false
         }
       }
@@ -231,9 +231,9 @@ class Dashboard extends Component {
         if (counterElm >= firstIdx && counterElm < lastIdx) {
           increment++
           arr[0] = index++
-          arr[1] = u.msisdn_penipu
-          arr[2] = u.jumlah_pelapor
-          arr[3] = u.status
+          arr[1] = u.MSISDN_TARGET
+          arr[2] = u.JUMLAH_PELAPOR
+          arr[3] = u.STATUS
           arraySms[idx] = arr
         }
       }
@@ -319,6 +319,7 @@ class Dashboard extends Component {
                               <option value={'Empty'} key={10}>Empty</option>
                               <option value={'Follow Up'} key={25}>Follow Up</option>
                               <option value={'Blocked'} key={50}>Blocked</option>
+                              <option value={'new entry'} key={60}>New Entry</option>
                             </FormControl>
                           </FormGroup>
                         </th>

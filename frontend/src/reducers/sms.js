@@ -20,10 +20,10 @@ export default (state = {}, action) => {
         case HOME_PAGE_LOADED:
             return {
                 ...state,
-                listPenipu: action.payload[0],
-                countPenipu: action.payload[1][0].jumlah,
+                listPenipu: action.payload[0].rows,
+                countPenipu: action.payload[1].rows[0].JUMLAH,
                 currentPage: 1,
-                page: Math.ceil(action.payload[1][0].jumlah / 10),
+                page: Math.ceil(action.payload[1].rows[0].JUMLAH / 10),
                 changeSearchCount: 10,
                 changeSearchMsisdn: '',
                 changeSearchJumlah: 0,
@@ -35,7 +35,7 @@ export default (state = {}, action) => {
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
                 ...state,
-                detail: action.payload[0]
+                detail: action.payload[0].rows
             }
         case GET_REFERENCE_SMS_BY_MSISDN:
             return {

@@ -56,15 +56,17 @@ class ViewPenipu extends Component {
 
         const smsTable = ["Id", "target", "pelapor", "content", "date", "uploader", "source"]
 
+        let i = 1
         let arraySms = []
         this.props.sms.detail.forEach((u, idx) => {
             let arr = []
-            arr[0] = u.id
-            arr[1] = u.msisdn_target
-            arr[2] = u.msisdn_pelapor
-            arr[3] = u.content
-            arr[4] = moment(u.date_system).format('hh:mm, DD MMM YYYY')
-            arr[5] = u.source
+            arr[0] = i++
+            arr[1] = u.MSISDN_TARGET
+            arr[2] = u.MSISDN_PELAPOR
+            arr[3] = u.CONTENT
+            arr[4] = moment(u.DATE_SYSTEM).format('hh:mm, DD MMM YYYY')
+            arr[5] = u.USER_ID
+            arr[6] = u.SOURCE
             arraySms[idx] = arr
         });
 
