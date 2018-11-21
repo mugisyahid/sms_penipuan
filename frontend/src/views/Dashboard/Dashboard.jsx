@@ -181,7 +181,7 @@ class Dashboard extends Component {
         </Grid>
       </div>)
     }
-    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "status", "Pilih"]
+    const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "Update By", "status", "Pilih"]
 
     const selectedMSISDN = this.props.sms.selectedMSISDN ? this.props.sms.selectedMSISDN : ''
 
@@ -233,7 +233,8 @@ class Dashboard extends Component {
           arr[0] = index++
           arr[1] = u.MSISDN_TARGET
           arr[2] = u.JUMLAH_PELAPOR
-          arr[3] = u.STATUS
+          arr[3] = u.UPDATE_BY
+          arr[4] = u.STATUS
           arraySms[idx] = arr
         }
       }
@@ -320,6 +321,7 @@ class Dashboard extends Component {
                               <option value={'Follow Up'} key={25}>Follow Up</option>
                               <option value={'Blocked'} key={50}>Blocked</option>
                               <option value={'new entry'} key={60}>New Entry</option>
+                              <option value={'must be blocked'} key={65}>New Entry</option>
                             </FormControl>
                           </FormGroup>
                         </th>
