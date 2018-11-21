@@ -9,6 +9,7 @@ import Button from "../../components/CustomButton/CustomButton";
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'; // Import
+import ReactLoading from "react-loading";
 
 import agent from '../../agent';
 
@@ -18,7 +19,8 @@ import {
   UPDATE_SEARCH_SMS,
   UPDATE_SEARCH_SMS_PAGE,
   UPDATE_SMS_REFERENCE,
-  POP_UP_MODAL
+  POP_UP_MODAL,
+  RELOAD_HOME_PAGE
 } from '../../constants/actionTypes';
 
 const mapStateToProps = state => ({
@@ -29,6 +31,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onLoad: (payload) =>
     dispatch({ type: HOME_PAGE_LOADED, payload }),
+  onReload: () =>
+    dispatch({ type: RELOAD_HOME_PAGE }),
   onUnload: () =>
     dispatch({ type: HOME_PAGE_UNLOADED }),
   onUpdateField: (key, value) =>
@@ -117,6 +121,11 @@ class Dashboard extends Component {
 
 
   render() {
+
+    if (this.props.sms.reload) {
+      window.location.reload()
+    }
+
     const updateSms = () => {
       if (this.props.sms.selectedMSISDN) {
         confirmAlert({
@@ -154,7 +163,23 @@ class Dashboard extends Component {
     }
 
     if (!this.props.sms.listPenipu) {
-      return null;
+      return (<div className="content">
+        <Grid fluid classNames="pagination-centered">
+          <Row>
+            <Col md={12}>
+              <Card
+                title="SMS List"
+                category=""
+                ctTableFullWidth
+                ctTableResponsive
+                content={
+                  <div style={{ margin: 'auto', justifyContent: 'center', display: 'flex' }}> <ReactLoading type="spin" color="#000000" height={'3%'} width={'3%'} /> </div>
+                }
+              />
+            </Col>
+          </Row>
+        </Grid>
+      </div>)
     }
     const smsTable = ["No", "MSISDN Penipu", "Jumlah Pelapor", "status", "Pilih"]
 
@@ -176,29 +201,27 @@ class Dashboard extends Component {
     let lastIdx = index + +this.props.sms.changeSearchCount
     let counterElm = 0
 
-    console.log(searchStatus)
-    console.log(searchStatus === "Empty")
     this.props.sms.listPenipu.some((u, idx) => {
       let arr = []
 
       if (searchMsisdn) {
-        if (String(u.msisdn_penipu).indexOf(searchMsisdn) < 0) {
+        if (String(u.MSISDN_TARGET).indexOf(searchMsisdn) < 0) {
           issearchMsisdn = false
         }
       }
 
       if (searchStatus !== "All") {
         if (searchStatus === "Empty") {
-          if (String(u.status) !== "") {
+          if (u.STATUS) {
             issearchStatus = false
           }
-        } else if (String(u.status).indexOf(searchStatus) < 0) {
+        } else if (String(u.STATUS).indexOf(searchStatus) < 0) {
           issearchStatus = false
         }
       }
 
       if (searchJumlah > 0) {
-        if (+searchJumlah !== +u.jumlah_pelapor) {
+        if (+searchJumlah !== +u.JUMLAH_PELAPOR) {
           issearchJumlah = false
         }
       }
@@ -208,9 +231,9 @@ class Dashboard extends Component {
         if (counterElm >= firstIdx && counterElm < lastIdx) {
           increment++
           arr[0] = index++
-          arr[1] = u.msisdn_penipu
-          arr[2] = u.jumlah_pelapor
-          arr[3] = u.status
+          arr[1] = u.MSISDN_TARGET
+          arr[2] = u.JUMLAH_PELAPOR
+          arr[3] = u.STATUS
           arraySms[idx] = arr
         }
       }
@@ -296,6 +319,7 @@ class Dashboard extends Component {
                               <option value={'Empty'} key={10}>Empty</option>
                               <option value={'Follow Up'} key={25}>Follow Up</option>
                               <option value={'Blocked'} key={50}>Blocked</option>
+                              <option value={'new entry'} key={60}>New Entry</option>
                             </FormControl>
                           </FormGroup>
                         </th>

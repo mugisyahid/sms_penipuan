@@ -20,10 +20,10 @@ export default (state = {}, action) => {
         case HOME_PAGE_LOADED:
             return {
                 ...state,
-                listPenipu: action.payload[0],
-                countPenipu: action.payload[1][0].jumlah,
+                listPenipu: action.payload[0].rows,
+                countPenipu: action.payload[1].rows[0].JUMLAH,
                 currentPage: 1,
-                page: Math.ceil(action.payload[1][0].jumlah / 10),
+                page: Math.ceil(action.payload[1].rows[0].JUMLAH / 10),
                 changeSearchCount: 10,
                 changeSearchMsisdn: '',
                 changeSearchJumlah: 0,
@@ -35,7 +35,7 @@ export default (state = {}, action) => {
         case GET_DETAIL_SMS_BY_MSISDN:
             return {
                 ...state,
-                detail: action.payload[0]
+                detail: action.payload[0].rows
             }
         case GET_REFERENCE_SMS_BY_MSISDN:
             return {
@@ -68,12 +68,11 @@ export default (state = {}, action) => {
             }
         case INSERT_DETAIL_SMS:
             return { ...state,
-                redirect: '/home'
             };
         case INSERT_DETAIL_SMS_UPDATE:
             return { ...state,
                 [action.key]: action.value,
-                isFirst: false                
+                isFirst: false
             };
         case UPDATE_SEARCH_SMS:
         case UPDATE_FIELD_SMS:
@@ -96,9 +95,14 @@ export default (state = {}, action) => {
         case POP_UP_MODAL:
             return { ...state,
                 show: action.value,
-                result: action.arr
+                result: action.arr,
+                reload: !action.value,
+                redirect: !action.value ? '/home' : null
             };
         case INSERT_DETAIL_SMS_PAGE_UNLOADED:
+            return { ...state,
+                reload: true
+            };
         case VIEW_DETAIL_SMS_PAGE_UNLOADED:
         case UPDATE_DETAIL_SMS_PAGE_UNLOADED:
         default:

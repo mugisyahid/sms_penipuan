@@ -4,7 +4,8 @@ import {
     FormControl,
     FormGroup,
     ControlLabel,
-    HelpBlock
+    HelpBlock,
+    Modal
 } from "react-bootstrap";
 import { connect } from 'react-redux';
 // import agent from '../../agent';
@@ -18,7 +19,8 @@ import {
     INSERT_DETAIL_SMS_PAGE_UNLOADED,
     INSERT_DETAIL_SMS_PAGE_LOADED,
     INSERT_DETAIL_SMS_UPDATE,
-    INSERT_DETAIL_SMS
+    INSERT_DETAIL_SMS,
+    POP_UP_MODAL
 } from '../../constants/actionTypes';
 import agent from "../../agent.js";
 
@@ -31,8 +33,10 @@ const mapDispatchToProps = dispatch => ({
         dispatch({ type: INSERT_DETAIL_SMS_PAGE_UNLOADED }),
     onUpdateField: (key, value) =>
         dispatch({ type: INSERT_DETAIL_SMS_UPDATE, key, value }),
-    onInsert: () =>
-        dispatch({ type: INSERT_DETAIL_SMS }),
+    onInsert: (value) =>
+        dispatch({ type: INSERT_DETAIL_SMS, value }),
+    onPopup: (value, arr) =>
+        dispatch({ type: POP_UP_MODAL, value, arr }),
 
 });
 
@@ -48,16 +52,17 @@ class NewPenipu extends Component {
         this.submitForm = (target, pelapor, content) => ev => {
             ev.preventDefault()
             const param = {
-                msisdn_target: target,
-                msisdn_pelapor: pelapor,
+                msisdn_target: target /*target.indexOf('62') === 0 ? target.substring(2, target.length) : target.substring(1, target.length)*/,
+                msisdn_pelapor: pelapor /*pelapor.indexOf('62') === 0 ? pelapor.substring(2, pelapor.length) : pelapor.substring(1, pelapor.length)*/,
                 content: content,
                 uploader: window.localStorage.getItem('user').substring(1, window.localStorage.getItem('user').length - 1),
                 source: 'webapps'
             }
-            // eslint-disable-next-line 
             const res = agent.Sms.insertDetail(param)
             // the result gonna be useful, maybe?
-            this.props.onInsert()
+            console.log(res)
+            this.handleShow(param)
+            this.props.onInsert(true)
         }
 
     }
@@ -72,9 +77,19 @@ class NewPenipu extends Component {
         return value !== 'success'
     }
 
+
+    handleClose = () => {
+        this.props.onPopup(false, null)
+    }
+
+    handleShow = (value) => {
+        this.props.onPopup(true, value)
+    }
+
+
     validateNumber(value) {
         if (value) {
-            const re = /^(?:62|\(0\d{2,3}\)|08)\s?(?:08\s?\d?)?(?:[ -]?\d{4,8}){2,6}$/;
+            const re = /^(?:62|\(0\d{2,3}\))\s?(?:08\s?\d?)?(?:[ -]?\d{4,8}){2,6}$/;
             if (re.test(String(value).toLowerCase())) { return 'success'; }
             else { return 'error'; }
         } else {
@@ -99,8 +114,25 @@ class NewPenipu extends Component {
 
         const isNotSubmit = isFirst || validationTarget || validationPelapor || validationContent
 
+        if (typeof this.props.sms.result !== 'undefined' && this.props.sms.result) {
+            console.log(this.props.sms.result)
+        }
+
         return (<div className="content">
             <div className="content">
+                <Modal show={this.props.sms.show} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Update Report</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Grid fluid>
+                            {this.props.sms.result ? 'Sukses insert' : ''}
+                        </Grid>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.handleClose}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
                 <Grid fluid>
                     <Row>
                         <Col md={8}>
@@ -121,7 +153,7 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
-                                                {!isFirst && target && validationTarget ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
+                                                {!isFirst && target && validationTarget ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                             <Col md={4}>
                                                 <FormGroup controlId="formControlsUploadFiles"
@@ -135,7 +167,7 @@ class NewPenipu extends Component {
                                                         autoComplete="off"
                                                     />
                                                 </FormGroup>
-                                                {!isFirst && pelapor && validationPelapor ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx or 08xxxxxxx</HelpBlock> : ''}
+                                                {!isFirst && pelapor && validationPelapor ? <HelpBlock>MSISDN Format: min. 10 digits number, 62xxxxxxx</HelpBlock> : ''}
                                             </Col>
                                         </Row>
                                         <Row>

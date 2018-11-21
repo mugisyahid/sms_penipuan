@@ -8,7 +8,15 @@ router.get('/', (req, res) => {
     //     res.send(r)
     // })
     query.getAllPenipu((err, r) => {
-        res.send(r)
+        // res.status(500).send(r)
+
+        // res.write('Hello\n');
+        setInterval(function () {
+
+            res.send(r)
+
+            // res.end(' World\n');
+        }, 5000);
     })
 })
 
